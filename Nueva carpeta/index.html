@@ -1,0 +1,1155 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Turismo y Hoteles</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            text-align: center;
+            background: linear-gradient(to bottom, #f8f9fa, #e9ecef);
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        h1 {
+            color: white;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 15px 25px;
+            font-weight: 600;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            font-size: 20px;
+            margin: 10px 0;
+        }
+
+        .background-container {
+            width: 100%;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .background-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: -1;
+        }
+
+        .tabs {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            position: relative;
+        }
+
+        .tab-button {
+            padding: 15px 30px;
+            background-color: rgba(44, 62, 80, 0.9);
+            color: white;
+            border: 2px solid #f8f9fa;
+            cursor: pointer;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 250px;
+            font-size: 18px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .tab-button:hover {
+            background-color: #f39c12;
+            color: #fff;
+            border-color: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 18px;
+                padding: 10px;
+            }
+            .tab-button {
+                font-size: 16px;
+                padding: 12px 25px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 16px;
+                padding: 8px;
+            }
+            .tab-button {
+                font-size: 14px;
+                padding: 10px 20px;
+            }
+        }
+    </style>
+    <script>
+        function abrirVentanaHoteles() {
+    let nuevaVentana = window.open("", "_blank", "width=800,height=600,scrollbars=yes");
+    let contenido = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>Lista de Hoteles</title>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+            <style>
+                body { font-family: Arial, sans-serif; text-align: center; background-color: #f4f4f4; margin: 20px; }
+                .list-btn { padding: 15px; margin: 10px; background-color: #007BFF; color: white; cursor: pointer; text-align: center; border-radius: 8px; display: block; font-size: 20px; }
+                
+                /* Contenedor de botones */
+                .nav-container { display: flex; justify-content: center; gap: 15px; margin-top: 20px; flex-wrap: wrap; }
+
+                /* Botones más grandes */
+                .nav-btn, .scroll-btn { 
+                    padding: 18px 25px; /* Aumenta el tamaño */
+                    font-size: 22px; /* Letras más grandes */
+                    font-weight: bold; 
+                    color: white; 
+                    border: none; 
+                    cursor: pointer; 
+                    border-radius: 8px; 
+                    min-width: 140px; /* Asegura un tamaño adecuado */
+                }
+
+                .nav-btn { background-color: red; } /* Botón de regresar */
+                .scroll-btn { background-color: green; } /* Botón de subir/bajar */
+
+                /* Ajustes para móviles */
+                @media (max-width: 600px) {
+                    .nav-btn, .scroll-btn { 
+                        font-size: 26px; /* Letras aún más grandes */
+                        padding: 22px 30px; /* Más fácil de tocar */
+                        min-width: 160px; /* Botones más anchos */
+                    }
+                }
+            </style>
+        </head>
+        <body>
+            <h2>Lista de Hoteles</h2>
+            <div class="nav-container">
+                <button class="nav-btn" onclick="window.close()">⬅️ Regresar</button>
+                <button class="scroll-btn" onclick="window.scrollTo(0, document.body.scrollHeight)">⬇️ Bajar</button>
+            </div>
+            ${generarHoteles()}
+            <div class="nav-container">
+                <button class="scroll-btn" onclick="window.scrollTo(0, 0)">⬆️ Subir</button>
+                <button class="nav-btn" onclick="window.close()">⬅️ Regresar</button>
+            </div>
+        </body>
+        </html>
+    `;
+    nuevaVentana.document.open();
+    nuevaVentana.document.write(contenido);
+    nuevaVentana.document.close();
+}
+
+function generarHoteles() {
+    const hoteles = [
+        { 
+            nombre: "[HOSTAL AREQUIPA]", 
+            direccion: "Jr. Arequipa N° 153, Puno", 
+            telefono: "942352440", 
+            whatsapp: "999555531",
+            descripcion: `<p>Ubicado en el centro, cerca al Parque Pino, este hotel ofrece habitaciones matrimoniales, simples, dobles, triples y cuádruples con baño privado, agua caliente, TV por cable y wifi. Además, cuenta con estacionamiento privado y servicio de información turística.</p>
+                        <p><strong>Contáctanos:</strong></p>
+                        <p>Teléfono: 942 352 440</p>
+                        <p>WhatsApp: 999 555 531</p>`,
+            ubicacion: "https://goo.su/KJkC", // Enlace a Google Maps
+            habitaciones: [
+                { tipo: "Simple", precio: "S/ 40" },
+                { tipo: "Doble", precio: "S/ 60" },
+                { tipo: "Triple", precio: "S/ 90" },
+                { tipo: "Cuádruple", precio: "S/ 120" }
+            ]
+        },
+        { 
+            nombre: "[HOSTAL LOS URUS]", 
+            direccion: "Jr. Theodoro Valcarcel N° 135, Puno", 
+            telefono: "984419954", 
+            whatsapp: "9984419954",
+            descripcion: `<p>Disponemos de habitaciones simples, matrimoniales, dobles, triples y cuádruples, todas con baño privado, agua caliente y TV cable.</p>
+                  <p><strong>Información turística:</strong> Cerca al Parque Pino y el Mercado Central.</p>
+                  <p><strong>Contáctanos:</strong></p>
+                  <p>Teléfono: 051 352 141 / 984 419 954</p>
+                  <p>WhatsApp: 984 419 954</p>`,
+            ubicacion: "https://surli.cc/fbqfxs", // Enlace a Google Maps
+            habitaciones: [
+                { tipo: "Simple", precio: "S/ 50" },
+                { tipo: "Doble", precio: "S/ 70" },
+                { tipo: "Triple", precio: "S/ 105" },
+                { tipo: "Cuádruple", precio: "S/ 140" }
+            ]
+        },
+        { 
+            nombre: "[HOSTAL ZURIT]", 
+            direccion: "Jr. Fermin Arbulu N° 191, Puno", 
+            telefono: "943611684", 
+            whatsapp: "943611684", 
+            descripcion: `<p>Ubicado en el centro de Puno, nuestras habitaciones, algunas con vistas, cuentan con baño privado, ducha, armario, TV y wifi. El alojamiento también ofrece desayuno buffet o continental opcional.</p>
+                  <p>Estamos cerca de varios puntos de interés, como el Arco Deustua y la Plaza de Armas.</p>
+                  <p><strong>Teléfono de contacto:</strong> 943611684</p>`,
+            ubicacion: "https://surl.li/xknarh", // Enlace a Google Maps
+            habitaciones: [
+                { tipo: "Simple", precio: "S/ 50" },
+                { tipo: "Doble", precio: "S/ 60" },
+                { tipo: "Matrimonial", precio: "S/ 00" },
+                { tipo: "Triple", precio: "S/ 00" },
+                { tipo: "Cuádruple", precio: "S/ 00" },
+                { tipo: "Quíntuple", precio: "S/ 00" }
+            ]
+        },
+        { 
+            nombre: "PERÚ", 
+            direccion: "Jr. Fermin Arbulu N° 131, Puno", 
+            telefono: "945516295", 
+            whatsapp: "945516295", 
+            descripcion: `<p>Ubicado cerca del Parque Pino, ofrecemos estacionamiento privado (por un suplemento).</p>
+                  <p>Las habitaciones están equipadas con escritorio, TV de pantalla plana, wifi, baño privado y agua caliente. Algunas también tienen vistas a la ciudad.</p>
+                  <p><strong>Teléfono de contacto:</strong> 945516295</p>`,
+            ubicacion: "https://surl.li/jjtgog", // Enlace a Google Maps
+            habitaciones: [
+                { tipo: "Simple", precio: "S/ 60" },
+                { tipo: "Doble", precio: "S/ 80" },
+                { tipo: "Triple", precio: "S/ 110" },
+                { tipo: "Cuádruple", precio: "S/ 00" },
+                { tipo: "Quíntuple", precio: "S/ 00" }
+            ]
+        },
+        { 
+            nombre: "EUROPA", 
+            direccion: "Jr. Alfonso Ugarte N° 112, Puno", 
+            telefono: "986119215", 
+            whatsapp: "986119215",
+            descripcion: `<p>Ubicado cerca al Mercado Central y del Parque Pino, nuestras habitaciones están equipadas con TV, wifi, baño privado y agua caliente.</p>
+                  <p><strong>Teléfono de contacto:</strong> 986119215</p>`,
+            ubicacion: "https://www.google.com/maps/place/Hotel+Europa/@-15.8376745,-70.025913,21z/data=!4m23!1m13!3m12!1s0x915d699536e30aa7:0x7530d308103ff3c2!2sHotel+Europa!5m2!4m1!1i2!8m2!3d-15.8376745!4d-70.025913!10e5!14m1!1BCgIYEw!16s%2Fg%2F1t_wqf3d!3m8!1s0x915d699536e30aa7:0x7530d308103ff3c2!5m2!4m1!1i2!8m2!3d-15.8376745!4d-70.025913!16s%2Fg%2F1t_wqf3d?authuser=0&entry=ttu&g_ep=EgoyMDI1MDMyMy4wIKXMDSoJLDEwMjExNDU1SAFQAw%3D%3D", // Enlace a Google Maps
+            habitaciones: [
+                { tipo: "Simple", precio: "S/ 50" },
+                { tipo: "Doble", precio: "S/ 60" },
+                { tipo: "Cuádruple", precio: "S/ 120" },
+                { tipo: "Quíntuple", precio: "S/ 150" }
+            ]
+        },
+        { 
+            nombre: "DON TITO INN", 
+            direccion: "Jr.Los incas N° 236, Puno", 
+            telefono: "51978965432", 
+            whatsapp: "51978965432",
+            descripcion: `<p>Ubicado frente al Plaza Vea en el centro de la ciudad, contamos con habitaciones simples, dobles y triples, todas con baño privado, agua caliente, TV y wifi.</p>
+                  <p><strong>Teléfono de contacto:</strong> 972968622</p>`,
+            ubicacion: "https://www.google.com/maps/place/Hotel+Don+Tito/@-15.8370605,-70.0252136,21z/data=!4m23!1m13!3m12!1s0x915d699536e30aa7:0x7530d308103ff3c2!2sHotel+Europa!5m2!4m1!1i2!8m2!3d-15.8376745!4d-70.025913!10e5!14m1!1BCgIYEw!16s%2Fg%2F1t_wqf3d!3m8!1s0x915d6995420fd1bb:0x82472702dc81e5b9!5m2!4m1!1i2!8m2!3d-15.8370001!4d-70.0251546!16s%2Fg%2F11csqz4ydx?authuser=0&entry=ttu&g_ep=EgoyMDI1MDMyMy4wIKXMDSoJLDEwMjExNDU1SAFQAw%3D%3D", // Enlace a Google Maps
+            habitaciones: [
+                { tipo: "Simple", precio: "S/ 50" },
+                { tipo: "Doble", precio: "S/ 70" },
+                { tipo: "Triple", precio: "S/ 90" }
+            ]
+        },
+        { 
+            nombre: "HOSTAL TERRA & LAKE", 
+            direccion: "Jr. Lampa N° 230, Puno", 
+            telefono: "916820180", 
+            whatsapp: "999200490",
+            descripcion: `<p>Ubicado frente al Terminal Dorado, a unos 10 minutos del Parque Pino, contamos con habitaciones con calefacción: simples, dobles, triples, cuádruples y matrimoniales. Todas con baño privado, agua caliente, TV, wifi, cochera y servicio de información turística.</p>
+                  <p><strong>Teléfonos de contacto:</strong> 916820180 / 999200490 / 051209793</p>`,
+            ubicacion: "https://www.google.com/maps/place/Do%C3%B1a+JULIA+HOSTAL+PUNO/@-15.8336122,-70.0261982,21z/data=!4m6!3m5!1s0x915d693cabd8cdb1:0x380cf03262ce58d9!8m2!3d-15.833659!4d-70.0261561!16s%2Fg%2F11h00940wq?authuser=0&entry=ttu&g_ep=EgoyMDI1MDMyMy4wIKXMDSoJLDEwMjExNDU1SAFQAw%3D%3D", // Enlace a Google Maps
+            habitaciones: [
+                { tipo: "Simple", precio: "S/ 50" },
+                { tipo: "Doble", precio: "S/ 80" },
+                { tipo: "Matrimonial", precio: "S/ 70" },
+                { tipo: "Triple", precio: "S/ 90" },
+                { tipo: "Cuádruple", precio: "S/ 120" }
+            ]
+        },
+        { 
+            nombre: "[HOSTAL EL INTI]", 
+            direccion: "Av. La Torre N° 137 Int. 2, Puno", 
+            telefono: "950025925", 
+            whatsapp: "950025925",
+            descripcion: `<p>Ubicado en el centro de la ciudad, cerca al Parque Pino, Plaza Vea y Mercado Central, ofrecemos habitaciones: matrimoniales, simples, dobles, triples, cuádruples, familiares y compartidas. Todas cuentan con baño privado, agua caliente, TV cable, wifi, depósito de equipajes y caja de seguridad.</p>
+                  <p><strong>Teléfonos de contacto:</strong> 051351594 / 950025925</p>`,
+            ubicacion: "https://www.google.com/maps/place/Hostal+KillaWasi/@-15.8367032,-70.0264288,21z/data=!4m9!3m8!1s0x915d6995531f32e5:0x7413f1ef69b2cdd0!5m2!4m1!1i2!8m2!3d-15.8367773!4d-70.0263523!16s%2Fg%2F11b6d2qb9j?authuser=0&entry=ttu&g_ep=EgoyMDI1MDMyMy4wIKXMDSoJLDEwMjExNDU1SAFQAw%3D%3D", // Enlace a Google Maps
+            habitaciones: [
+                { tipo: "Simple", precio: "$90" },
+                { tipo: "Doble", precio: "$120" },
+                { tipo: "Matrimonial", precio: "$130" },
+                { tipo: "Triple", precio: "$160" },
+                { tipo: "Cuádruple", precio: "$190" },
+                { tipo: "Quíntuple", precio: "$220" }
+            ]
+        },
+        { 
+            nombre: "[HOSTAL ROMA INN]", 
+            direccion: "Jr. Libertad N° 115 esquina con Jr. Tacna, Puno", 
+            telefono: "051450127", 
+            whatsapp: "952699975",
+            descripcion: `<p>Ubicado a una cuadra del Mercado Central, ofrecemos habitaciones: simples, dobles, triples y cuádruples. Todas cuentan con baño privado, agua caliente, TV cable y wifi.</p>
+                  <p><strong>Información de servicio turístico.</strong></p>
+                  <p><strong>Teléfonos de contacto:</strong> 051450127</p>
+                  <p><strong>WhatsApp:</strong> 986861999 / 952699975</p>`,
+            ubicacion: "https://www.google.com/maps/place/Hostal+Roma+Inn+Puno/@-15.8386636,-70.026257,21z/data=!4m9!3m8!1s0x915d69952ea7bbaf:0x145824da33ea3e3d!5m2!4m1!1i2!8m2!3d-15.8387007!4d-70.026145!16s%2Fg%2F11b73jp7v7?authuser=0&entry=ttu&g_ep=EgoyMDI1MDMyMy4wIKXMDSoJLDEwMjExNDU1SAFQAw%3D%3D", // Enlace a Google Maps
+            habitaciones: [
+                { tipo: "Simple", precio: "S/ 40" },
+                { tipo: "Doble", precio: "S/ 50" },
+                { tipo: "Triple", precio: "S/ 60" },
+                { tipo: "Cuádruple", precio: "S/ 80" }
+            ]
+        },
+        { 
+            nombre: "FRANCIS", 
+            direccion: "Jr. Tacna N° 305, Puno", 
+            telefono: "913736161", 
+            whatsapp: "913736161",
+            descripcion: `<p>Tenemos capacidad de hasta 120 personas. Ofrecemos habitaciones: simples, dobles, matrimoniales y triples. Todas cuentan con piso alfombrado, baño privado, agua caliente, wifi, calefacción, secador de pelo.</p>
+                  <p>También ofrecemos desayuno bufet, restaurante, café bar y servicio de información turística general.</p>
+                  <p><strong>Teléfonos de contacto:</strong> 913736161 / 969404048</p>`,
+            ubicacion: "https://www.google.com/maps/place/Franci's+Puno+Hotel/@-15.8387893,-70.0260103,21z/data=!4m9!3m8!1s0x915d69952917b129:0x7021d402d8dc1cea!5m2!4m1!1i2!8m2!3d-15.8387025!4d-70.0259778!16s%2Fg%2F1tfqgwdg?authuser=0&entry=ttu&g_ep=EgoyMDI1MDMyMy4wIKXMDSoJLDEwMjExNDU1SAFQAw%3D%3D", // Enlace a Google Maps
+            habitaciones: [
+                { tipo: "Simple", precio: "S/ 90" },
+                { tipo: "Doble", precio: "S/ 90" },
+                { tipo: "Triple", precio: "S/ 135" },
+                { tipo: "Cuádruple", precio: "S/ 180" }
+            ]
+        },
+        { 
+            nombre: "HOSTAL VIRGEN DE LAS NIEVES", 
+            direccion: "Av. Titicaca N° 156, Puno", 
+            telefono: "981811978", 
+            whatsapp: "981811978",
+            descripcion: `<p>Ubicado a tres cuadras de la Plaza de Armas, ofrecemos habitaciones alfombradas: para una persona, dobles, triples y cuádruples. Todas cuentan con baño privado, agua caliente, TV cable y wifi.</p>
+                  <p><strong>Información de servicio turístico.</strong></p>
+                  <p><strong>Precios especiales a delegaciones.</strong></p>
+                  <p><strong>Teléfonos de contacto:</strong> 051354310 / 051351682 / 981811978 / 951990441</p>`,
+            ubicacion: "https://www.google.com/maps/place/Hostal+Virgen+de+las+Nieves+II+Centro/@-15.8393539,-70.0256061,21z/data=!4m20!1m10!3m9!1s0x915d69952917b129:0x7021d402d8dc1cea!2sFranci's+Puno+Hotel!5m2!4m1!1i2!8m2!3d-15.8387025!4d-70.0259778!16s%2Fg%2F1tfqgwdg!3m8!1s0x915d6994de3effa1:0x6f0dd06abaafd471!5m2!4m1!1i2!8m2!3d-15.8393256!4d-70.0252619!16s%2Fg%2F11cn9p6ckn?authuser=0&entry=ttu&g_ep=EgoyMDI1MDMyMy4wIKXMDSoJLDEwMjExNDU1SAFQAw%3D%3D", // Enlace a Google Maps
+            habitaciones: [
+                { tipo: "Doble", precio: "S/ 60" },
+                { tipo: "Matrimonial", precio: "S/ 90" },
+                { tipo: "Triple", precio: "S/ 110" }
+            ]
+        },
+        { 
+            nombre: "HOSTAL NESTHER", 
+            direccion: "Jr. Deustua N° 280, Puno", 
+            telefono: "998858638", 
+            whatsapp: "998858638",
+            descripcion: `<p>Ubicado a una cuadra de la Plaza de Armas, ofrecemos habitaciones para una persona, dobles y triples. Todas cuentan con baño privado, agua caliente, TV cable y wifi.</p>
+                  <p><strong>Información turística.</strong></p>
+                  <p><strong>Teléfonos de contacto:</strong> 998858638 / 974315750</p>`,
+            ubicacion: "https://www.letsbookhotel.com/es/peru/puno/hotel/hotel-nesther.aspx", // Enlace a Google Maps
+            habitaciones: [
+                { tipo: "Simple", precio: "S/ 50" },
+                { tipo: "Doble", precio: "S/ 70" },
+                { tipo: "Triple", precio: "S/ 90" }
+            ]
+        },
+        { 
+            nombre: "Moquegua3", 
+            direccion: "Jr. Grau 302, Moquegua", 
+            telefono: "51990234567", 
+            whatsapp: "51990234567",
+            descripcion: "Un hotel moderno con arquitectura minimalista y excelente atención.",
+            ubicacion: "https://surli.cc/fbqfxs", // Enlace a Google Maps
+            habitaciones: [
+                { tipo: "Simple", precio: "$100" },
+                { tipo: "Doble", precio: "$130" },
+                { tipo: "Matrimonial", precio: "$140" },
+                { tipo: "Triple", precio: "$170" },
+                { tipo: "Cuádruple", precio: "$200" },
+                { tipo: "Quíntuple", precio: "$230" }
+            ]
+        },
+        { 
+            nombre: "Moquegua4", 
+            direccion: "Jr. Grau 302, Moquegua", 
+            telefono: "51990234567", 
+            whatsapp: "51990234567",
+            descripcion: "Un hotel moderno con arquitectura minimalista y excelente atención.",
+            ubicacion: "https://surli.cc/fbqfxs", // Enlace a Google Maps
+            habitaciones: [
+                { tipo: "Simple", precio: "$100" },
+                { tipo: "Doble", precio: "$130" },
+                { tipo: "Matrimonial", precio: "$140" },
+                { tipo: "Triple", precio: "$170" },
+                { tipo: "Cuádruple", precio: "$200" },
+                { tipo: "Quíntuple", precio: "$230" }
+            ]
+        },
+        { 
+            nombre: "Moquegua5", 
+            direccion: "Jr. Grau 302, Moquegua", 
+            telefono: "51990234567", 
+            whatsapp: "51990234567",
+            descripcion: "Un hotel moderno con arquitectura minimalista y excelente atención.",
+            ubicacion: "https://surli.cc/fbqfxs", // Enlace a Google Maps
+            habitaciones: [
+                { tipo: "Simple", precio: "$100" },
+                { tipo: "Doble", precio: "$130" },
+                { tipo: "Matrimonial", precio: "$140" },
+                { tipo: "Triple", precio: "$170" },
+                { tipo: "Cuádruple", precio: "$200" },
+                { tipo: "Quíntuple", precio: "$230" }
+            ]
+        }
+    ];
+
+    let html = `
+    <style>
+        body { font-family: 'Arial', sans-serif; background-color: #f5f5f5; margin: 20px; color: #333; }
+        .hotel-container { background: #fff; border-radius: 10px; padding: 20px; margin-bottom: 30px; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); }
+        .hotel-title { font-size: 46px; color: #007BFF; margin-bottom: 10px; font-weight: bold; }
+        .hotel-images img { width: 100%; max-width: 400px; height: auto; border-radius: 10px; margin-bottom: 10px; }
+        .hotel-description { font-size: 18px; line-height: 1.6; margin-bottom: 10px; }
+        .hotel-contact { margin: 15px 0; text-align: center; }
+        
+        /* Botones de contacto */
+        .btn { 
+            display: inline-block; 
+            padding: 12px 20px; 
+            text-decoration: none; 
+            border-radius: 5px; 
+            color: white; 
+            font-weight: bold; 
+            margin-right: 10px; 
+            font-size: 20px;
+        }
+        .btn-call { background-color: #1E7E34; } /* Verde oscuro */
+        .btn-whatsapp { background-color: #1E7E34; } /* Verde oscuro */
+
+        /* Iconos más grandes */
+        .btn i { font-size: 26px; margin-right: 8px; }
+
+        /* Tablas */
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        table, th, td { border: 1px solid #ddd; text-align: center; }
+        th, td { padding: 15px; font-size: 22px; font-weight: bold; }
+        th { background-color: #007BFF; color: white; font-size: 24px; }
+
+        /* Ajuste para móviles */
+        @media (max-width: 600px) {
+            th, td { font-size: 24px; } /* Letras más grandes en móviles */
+            .btn { font-size: 22px; padding: 14px 22px; } /* Botones más grandes */
+            .btn i { font-size: 30px; } /* Iconos aún más grandes */
+        }
+    </style>
+`;
+
+hoteles.forEach(hotel => {
+    html += `
+        <div class="hotel-container">
+            <h3 class="hotel-title">Hotel ${hotel.nombre}</h3>
+            <div class="hotel-images">
+                <img src="./imagenes/${hotel.nombre.toLowerCase()}_1.jpg" alt="Hotel ${hotel.nombre} - Imagen 1">
+                <img src="./imagenes/${hotel.nombre.toLowerCase()}_2.jpg" alt="Hotel ${hotel.nombre} - Imagen 2">
+                <img src="./imagenes/${hotel.nombre.toLowerCase()}_3.jpg" alt="Hotel ${hotel.nombre} - Imagen 3">
+                <img src="./imagenes/${hotel.nombre.toLowerCase()}_4.jpg" alt="Hotel ${hotel.nombre} - Imagen 4">
+            </div>
+            <p class="hotel-description">${hotel.descripcion}</p>
+            <p><strong>Dirección:</strong> ${hotel.direccion}</p>
+            <p><strong>Ubicación:</strong>  
+                <a href="${hotel.ubicacion}" target="_blank">📍 Ver en Google Maps</a>
+            </p>
+            <div class="hotel-contact">
+                <a class="btn btn-call" href="tel:+${hotel.telefono}">
+                    <i class="fas fa-phone"></i> Llamar
+                </a>
+                <a class="btn btn-whatsapp" href="https://wa.me/${hotel.whatsapp}" target="_blank">
+                    <i class="fab fa-whatsapp"></i> WhatsApp
+                </a>
+            </div>
+            <table>
+                <tr><th>Tipo de Habitación</th><th>Precio</th></tr>
+                ${hotel.habitaciones.map(hab => `<tr><td>${hab.tipo}</td><td>${hab.precio}</td></tr>`).join("")}
+            </table>
+        </div>
+    `;
+});
+return html;
+}
+
+function abrirVentanaTurismo() {
+    let nuevaVentana = window.open("", "_blank", "width=800,height=600,scrollbars=yes");
+    let contenido = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>Lugares Turísticos</title>
+            <style>
+                body { 
+                    font-family: 'Arial', sans-serif; 
+                    text-align: center; 
+                    background-color: #f0f0f0; 
+                    color: #333; 
+                    margin: 0;
+                    padding: 0;
+                }
+                h2 {
+                    color: #444;
+                    font-size: 2em;
+                    margin: 20px 0;
+                }
+                .list-btn {
+                    padding: 12px 20px;
+                    margin: 10px;
+                    background-color: #4CAF50;
+                    color: white;
+                    cursor: pointer;
+                    text-align: center;
+                    border-radius: 8px;
+                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                    display: block;
+                    font-weight: bold;
+                    font-size: 16px;
+                    transition: all 0.3s ease;
+                    border: none;
+                    margin: 15px auto;
+                    width: auto;
+                }
+                .list-btn:hover {
+                    background-color: #45a049;
+                    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+                    transform: translateY(-3px);
+                }
+                .regresar-btn, .bajar-btn, .subir-btn {
+                    padding: 15px 30px;
+                    margin: 10px;
+                    background-color: #007BFF;
+                    color: white;
+                    cursor: pointer;
+                    text-align: center;
+                    border-radius: 50px;
+                    display: inline-block;
+                    border: none;
+                    font-weight: bold;
+                    font-size: 16px;
+                    transition: all 0.3s ease;
+                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                }
+                .regresar-btn {
+                    background-color: #FF5733;
+                }
+                .regresar-btn:hover {
+                    background-color: #C84C2B;
+                    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+                    transform: translateY(-3px);
+                }
+                .bajar-btn {
+                    background-color: #28A745;
+                }
+                .bajar-btn:hover {
+                    background-color: #218838;
+                    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+                    transform: translateY(-3px);
+                }
+                .subir-btn {
+                    background-color: #007BFF;
+                }
+                .subir-btn:hover {
+                    background-color: #0056b3;
+                    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+                    transform: translateY(-3px);
+                }
+
+                .button-container {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    gap: 25px;
+                    margin: 30px 0;
+                }
+
+                /* Media Queries */
+                @media (max-width: 768px) {
+                    .regresar-btn, .bajar-btn, .subir-btn {
+                        padding: 12px 25px;
+                        font-size: 14px;
+                    }
+                    .button-container {
+                        flex-direction: column;
+                    }
+                }
+
+                @media (max-width: 480px) {
+                    .regresar-btn, .bajar-btn, .subir-btn {
+                        padding: 12px 20px;
+                        font-size: 12px;
+                    }
+                    .button-container {
+                        gap: 15px;
+                    }
+                }
+            </style>
+        </head>
+        <body>
+            <div class="button-container">
+                <!-- Botones Regresar y Bajar al inicio -->
+                <button class="regresar-btn" onclick="window.close();">Regresar</button>
+                <button class="bajar-btn" onclick="window.scrollTo(0, document.body.scrollHeight);">Bajar</button>
+            </div>
+            <h2>Lugares Turísticos</h2>
+            ${generarLugaresTuristicos()}
+            <div class="button-container">
+                <!-- Botones Subir y Regresar al final -->
+                <button class="subir-btn" onclick="window.scrollTo(0, 0);">Subir</button>
+                <button class="regresar-btn" onclick="window.close();">Regresar</button>
+            </div>
+        </body>
+        </html>
+    `;
+    nuevaVentana.document.open();
+    nuevaVentana.document.write(contenido);
+    nuevaVentana.document.close();
+}
+
+function generarLugaresTuristicos() {
+    const lugares = [
+        {
+            nombre: "ISLA UROS",
+            ubicacion: "PUNO, PUNO",
+            historia: `<p style="text-align: justify;">La Isla de los Uros es un conjunto de islas artificiales ubicadas en el Lago Titicaca, 
+            cerca de la ciudad de Puno. Son conocidas por su población indígena, quienes han vivido allí durante siglos, 
+            y las islas están hechas de totora.</p>`,
+            imagenes: ["uros1.jpg", "uros2.jpg", "uros3.jpg", "uros4.jpg"]
+        },
+        {
+            nombre: "Lago Titicaca",
+            ubicacion: "Puno, Perú",
+            historia: `<p style="text-align: justify;">El lago Titicaca es el lago navegable más alto del mundo y es considerado un lugar sagrado en la cultura andina.</p>`,
+            imagenes: ["titicaca1.jpg", "titicaca2.jpg", "titicaca3.jpg", "titicaca4.jpg"]
+        },
+        {
+            nombre: "Líneas de Nazca",
+            ubicacion: "Ica, Perú",
+            historia: `<p style="text-align: justify;">El lago Titicaca es el lago navegable más alto del mundo y es considerado un lugar sagrado en la cultura andina.</p>`,
+            imagenes: ["nazca1.jpg", "nazca2.jpg", "nazca3.jpg", "nazca4.jpg"]
+        },
+        {
+            nombre: "Cañón del Colca",
+            ubicacion: "Arequipa, Perú",
+            historia: `<p style="text-align: justify;">El lago Titicaca es el lago navegable más alto del mundo y es considerado un lugar sagrado en la cultura andina.</p>`,
+            imagenes: ["colca1.jpg", "colca2.jpg", "colca3.jpg", "colca4.jpg"]
+        },
+        {
+            nombre: "Parque Nacional Huascarán",
+            ubicacion: "Áncash, Perú",
+            historia: `<p style="text-align: justify;">El lago Titicaca es el lago navegable más alto del mundo y es considerado un lugar sagrado en la cultura andina.</p>`,
+            imagenes: ["huascaran1.jpg", "huascaran2.jpg", "huascaran3.jpg", "huascaran4.jpg"]
+        }
+    ];
+
+    const agencias = [
+        {
+            nombre: "Agencia Aventura Andina",
+            celular: "+51 999 999 999",
+            whatsapp: "+51 999 999 999",
+            ubicacion: "Puno, Perú",
+            rutas: [
+                "Ruta 1: Puno - Lago Titicaca",
+                "Ruta 2: Puno - Islas Uros",
+                "Ruta 3: Puno - Sillustani",
+                "Ruta 4: Puno - Chucuito",
+                "Ruta 5: Puno - Juliaca",
+                "Ruta 6: Puno - Puno Centro",
+                "Ruta 7: Puno - La Raya",
+                "Ruta 8: Puno - Pucará",
+                "Ruta 9: Puno - Copacabana",
+                "Ruta 10: Puno - Colca Canyon"
+            ]
+        },
+        {
+            nombre: "Turismo Machu Picchu",
+            celular: "+51 988 888 888",
+            whatsapp: "+51 988 888 888",
+            ubicacion: "Cusco, Perú",
+            rutas: [
+                "Ruta 1: Cusco - Machu Picchu",
+                "Ruta 2: Cusco - Valle Sagrado",
+                "Ruta 3: Cusco - Ollantaytambo",
+                "Ruta 4: Cusco - Maras y Moray",
+                "Ruta 5: Cusco - Choquequirao",
+                "Ruta 6: Cusco - Pisac",
+                "Ruta 7: Cusco - Sacsayhuamán",
+                "Ruta 8: Cusco - Tambomachay",
+                "Ruta 9: Cusco - Qenqo",
+                "Ruta 10: Cusco - Aguas Calientes"
+            ]
+        },
+        {
+            nombre: "Perú Travel Express",
+            celular: "+51 977 777 777",
+            whatsapp: "+51 977 777 777",
+            ubicacion: "Lima, Perú",
+            rutas: [
+                "Ruta 1: Lima - Paracas",
+                "Ruta 2: Lima - Islas Ballestas",
+                "Ruta 3: Lima - Nazca",
+                "Ruta 4: Lima - Ica",
+                "Ruta 5: Lima - Huacachina",
+                "Ruta 6: Lima - Arequipa",
+                "Ruta 7: Lima - Cusco",
+                "Ruta 8: Lima - Puno",
+                "Ruta 9: Lima - Trujillo",
+                "Ruta 10: Lima - Huaraz"
+            ]
+        },
+        {
+            nombre: "Viaje Perú Natural",
+            celular: "+51 966 666 666",
+            whatsapp: "+51 966 666 666",
+            ubicacion: "Arequipa, Perú",
+            rutas: [
+                "Ruta 1: Arequipa - Colca Canyon",
+                "Ruta 2: Arequipa - Valle de los Volcanes",
+                "Ruta 3: Arequipa - Pampa Cañahuas",
+                "Ruta 4: Arequipa - Reserva Nacional de Salinas y Aguada Blanca",
+                "Ruta 5: Arequipa - El Misti",
+                "Ruta 6: Arequipa - Chivay",
+                "Ruta 7: Arequipa - Cañón de Cotahuasi",
+                "Ruta 8: Arequipa - Sabandía",
+                "Ruta 9: Arequipa - Yanahuara",
+                "Ruta 10: Arequipa - Puno"
+            ]
+        },
+        {
+            nombre: "Explora Perú",
+            celular: "+51 955 555 555",
+            whatsapp: "+51 955 555 555",
+            ubicacion: "Áncash, Perú",
+            rutas: [
+                "Ruta 1: Áncash - Huascarán",
+                "Ruta 2: Áncash - Callejón de Huaylas",
+                "Ruta 3: Áncash - Carhuaz",
+                "Ruta 4: Áncash - Yungay",
+                "Ruta 5: Áncash - Chavín de Huántar",
+                "Ruta 6: Áncash - Laguna Parón",
+                "Ruta 7: Áncash - Pastoruri",
+                "Ruta 8: Áncash - Llanganuco",
+                "Ruta 9: Áncash - Ancashino",
+                "Ruta 10: Áncash - Shacsha"
+            ]
+        }
+    ];
+
+    let html = "";
+
+    // Agregar los estilos CSS dinámicamente
+    html += `
+        <style>
+            /* CSS para la galería */
+            .gallery-grid {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr); /* Dos columnas por fila */
+                gap: 5px; /* Reducido el espacio entre las imágenes */
+                margin-top: 20px;
+            }
+
+            .gallery-item img {
+                width: 100%; /* Las imágenes ocupan todo el ancho de su contenedor */
+                height: auto; /* Mantiene la proporción de la imagen */
+                object-fit: contain; /* Ajuste sin recortes, sin distorsión */
+                border-radius: 8px; /* Esquinas redondeadas */
+                box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Sombra suave */
+                object-fit: cover; /* Mantiene la proporción y ajusta la imagen sin distorsionarla */
+                max-width: 100%; /* Limita el ancho máximo de la imagen al 60% del contenedor */
+                max-height: 400px; /* Limita la altura máxima de la imagen */
+            }
+
+            /* Estilos para pantallas más grandes */
+            @media (min-width: 768px) {
+                .gallery-grid {
+                    grid-template-columns: repeat(2, 1fr); /* Dos columnas por fila también en pantallas grandes */
+                }
+            }
+
+            /* Estilos adicionales para tu página */
+            body {
+                font-family: Arial, sans-serif;
+                margin: 0;
+                padding: 0;
+                background-color: #f4f4f4;
+            }
+
+            .lugar {
+                background-color: #fff;
+                margin: 20px;
+                padding: 20px;
+                border-radius: 10px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            }
+
+            h2 {
+                color: #2C3E50;
+            }
+
+            p {
+                font-size: 16px;
+                color: #7F8C8D;
+            }
+
+            .justificado {
+                text-align: justify;
+            }
+
+            .agencias {
+                margin-top: 40px;
+            }
+
+            .agencia {
+                background-color: #fff;
+                padding: 20px;
+                margin-bottom: 20px;
+                border-radius: 8px;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            }
+
+            .agencia h3 {
+                color: #228B22;
+                font-weight: bold;
+            }
+
+            .agencia p {
+                font-size: 14px;
+                color: #7F8C8D;
+            }
+
+            .agencia ul {
+                list-style-type: none;
+                padding-left: 0;
+            }
+
+            .agencia ul li {
+                font-size: 14px;
+                color: #7F8C8D;
+            }
+        </style>
+    `;
+
+    // Mostrar lugares turísticos
+    lugares.forEach(lugar => {
+        html += `
+            <div class="lugar">
+                <h2>${lugar.nombre}</h2>
+                <p><strong>Ubicación:</strong> ${lugar.ubicacion}</p>
+                <p class="justificado">${lugar.historia}</p>
+                <div class="gallery-grid">
+                    ${lugar.imagenes.map(img => `<div class="gallery-item"><img src="${img}" alt="${lugar.nombre}"></div>`).join('')}
+                </div>
+            </div>`;
+    });
+
+    // Mostrar agencias de viaje
+    html += `
+    <div class="agencias">
+        <h2 style="color: #ff6347; font-size: 2em;">Agencias de Viaje</h2>
+        ${agencias.map(agencia => `
+            <div class="agencia">
+                <h3 style="color: #228B22; font-weight: bold;">${agencia.nombre}</h3>
+                <p><strong>Celular:</strong> <a href="tel:${agencia.celular}" style="color: #0066cc;">${agencia.celular}</a></p>
+                <p><strong>WhatsApp:</strong> <a href="https://wa.me/${agencia.whatsapp.replace(/\s+/g, '')}" style="color: #25D366;">${agencia.whatsapp}</a></p>
+                <p><strong>Ubicación:</strong> ${agencia.ubicacion}</p>
+                <h4>Rutas disponibles:</h4>
+                <ul style="list-style-type: none; padding-left: 0;">
+                    ${agencia.rutas.map(ruta => `<li>${ruta}</li>`).join('')}
+                </ul>
+            </div>
+        `).join('')}
+    </div>`;
+
+    // Devolver el HTML generado
+    return html;
+}
+
+
+// Función para abrir la ventana con la lista de Deportes
+function abrirVentanaRestaurantes() {
+    let nuevaVentana = window.open("", "_blank", "width=800,height=600,scrollbars=yes");
+    let contenido = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>Restaurantes</title>
+            <style>
+                body { 
+                    font-family: 'Arial', sans-serif; 
+                    text-align: center; 
+                    background-color: #f0f0f0; 
+                    color: #333; 
+                    margin: 0;
+                    padding: 0;
+                }
+                h2 {
+                    color: #444;
+                    font-size: 2em;
+                    margin: 20px 0;
+                }
+                .list-btn {
+                    padding: 12px 20px;
+                    margin: 10px;
+                    background-color: #4CAF50;
+                    color: white;
+                    cursor: pointer;
+                    text-align: center;
+                    border-radius: 8px;
+                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                    display: block;
+                    font-weight: bold;
+                    font-size: 16px;
+                    transition: all 0.3s ease;
+                    border: none;
+                    margin: 15px auto;
+                    width: auto;
+                }
+                .list-btn:hover {
+                    background-color: #45a049;
+                    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+                    transform: translateY(-3px);
+                }
+                .regresar-btn, .bajar-btn, .subir-btn {
+                    padding: 15px 30px;
+                    margin: 10px;
+                    background-color: #007BFF;
+                    color: white;
+                    cursor: pointer;
+                    text-align: center;
+                    border-radius: 50px;
+                    display: inline-block;
+                    border: none;
+                    font-weight: bold;
+                    font-size: 16px;
+                    transition: all 0.3s ease;
+                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                }
+                .regresar-btn {
+                    background-color: #FF5733;
+                }
+                .regresar-btn:hover {
+                    background-color: #C84C2B;
+                    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+                    transform: translateY(-3px);
+                }
+                .bajar-btn {
+                    background-color: #28A745;
+                }
+                .bajar-btn:hover {
+                    background-color: #218838;
+                    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+                    transform: translateY(-3px);
+                }
+                .subir-btn {
+                    background-color: #007BFF;
+                }
+                .subir-btn:hover {
+                    background-color: #0056b3;
+                    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+                    transform: translateY(-3px);
+                }
+
+                .button-container {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    gap: 25px;
+                    margin: 30px 0;
+                }
+            </style>
+        </head>
+        <body>
+            <div class="button-container">
+                <button class="regresar-btn" onclick="window.close();">Regresar</button>
+                <button class="bajar-btn" onclick="window.scrollTo(0, document.body.scrollHeight);">Bajar</button>
+            </div>
+            <h2>Restaurantes</h2>
+            ${generarRestaurantes()}
+            <div class="button-container">
+                <button class="subir-btn" onclick="window.scrollTo(0, 0);">Subir</button>
+                <button class="regresar-btn" onclick="window.close();">Regresar</button>
+            </div>
+        </body>
+        </html>
+    `;
+    nuevaVentana.document.open();
+    nuevaVentana.document.write(contenido);
+    nuevaVentana.document.close();
+}
+
+// Función para generar los Restaurantes
+function generarRestaurantes() {
+    const restaurantes = [
+        { nombre: "Restaurante El Sol", ubicacion: "Lima, Perú" },
+        { nombre: "La Cevichería", ubicacion: "Trujillo, Perú" },
+        { nombre: "Pescados & Mariscos", ubicacion: "Piura, Perú" },
+        { nombre: "El Buen Sabor", ubicacion: "Cusco, Perú" },
+        { nombre: "Sabores Andinos", ubicacion: "Arequipa, Perú" }
+    ];
+    let html = "";
+    restaurantes.forEach(restaurante => {
+        html += `<div class="list-btn">${restaurante.nombre} - ${restaurante.ubicacion}</div>`;
+    });
+    return html;
+}
+// Función para abrir la ventana con la lista de Concentracion
+function abrirVentanaConcentracion() {
+    let nuevaVentana = window.open("", "_blank", "width=800,height=600,scrollbars=yes");
+    let contenido = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>Concentración</title>
+            <style>
+                body { 
+                    font-family: 'Arial', sans-serif; 
+                    text-align: center; 
+                    background-color: #f0f0f0; 
+                    color: #333; 
+                    margin: 0;
+                    padding: 0;
+                }
+                h2 {
+                    color: #444;
+                    font-size: 2em;
+                    margin: 20px 0;
+                }
+                .list-btn {
+                    padding: 12px 20px;
+                    margin: 10px;
+                    background-color: #4CAF50;
+                    color: white;
+                    cursor: pointer;
+                    text-align: center;
+                    border-radius: 8px;
+                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                    display: block;
+                    font-weight: bold;
+                    font-size: 16px;
+                    transition: all 0.3s ease;
+                    border: none;
+                    margin: 15px auto;
+                    width: auto;
+                }
+                .list-btn:hover {
+                    background-color: #45a049;
+                    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+                    transform: translateY(-3px);
+                }
+                .regresar-btn, .bajar-btn, .subir-btn {
+                    padding: 15px 30px;
+                    margin: 10px;
+                    background-color: #007BFF;
+                    color: white;
+                    cursor: pointer;
+                    text-align: center;
+                    border-radius: 50px;
+                    display: inline-block;
+                    border: none;
+                    font-weight: bold;
+                    font-size: 16px;
+                    transition: all 0.3s ease;
+                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                }
+                .regresar-btn {
+                    background-color: #FF5733;
+                }
+                .regresar-btn:hover {
+                    background-color: #C84C2B;
+                    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+                    transform: translateY(-3px);
+                }
+                .bajar-btn {
+                    background-color: #28A745;
+                }
+                .bajar-btn:hover {
+                    background-color: #218838;
+                    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+                    transform: translateY(-3px);
+                }
+                .subir-btn {
+                    background-color: #007BFF;
+                }
+                .subir-btn:hover {
+                    background-color: #0056b3;
+                    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+                    transform: translateY(-3px);
+                }
+
+                .button-container {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    gap: 25px;
+                    margin: 30px 0;
+                }
+            </style>
+        </head>
+        <body>
+            <div class="button-container">
+                <button class="regresar-btn" onclick="window.close();">Regresar</button>
+                <button class="bajar-btn" onclick="window.scrollTo(0, document.body.scrollHeight);">Bajar</button>
+            </div>
+            <h2>Concentración</h2>
+            ${generarConcentracion()}
+            <div class="button-container">
+                <button class="subir-btn" onclick="window.scrollTo(0, 0);">Subir</button>
+                <button class="regresar-btn" onclick="window.close();">Regresar</button>
+            </div>
+        </body>
+        </html>
+    `;
+    nuevaVentana.document.open();
+    nuevaVentana.document.write(contenido);
+    nuevaVentana.document.close();
+}
+
+// Función para generar los lugares de Concentración
+function generarConcentracion() {
+    const concentracion = [
+        { nombre: "Centro Deportivo El Sol", ubicacion: "Lima, Perú" },
+        { nombre: "Centro Cultural Trujillo", ubicacion: "Trujillo, Perú" },
+        { nombre: "Centro de Convenciones Piura", ubicacion: "Piura, Perú" },
+        { nombre: "Espacio Cultural Cusco", ubicacion: "Cusco, Perú" },
+        { nombre: "Centro de Eventos Arequipa", ubicacion: "Arequipa, Perú" }
+    ];
+    let html = "";
+    concentracion.forEach(lugar => {
+        html += `<div class="list-btn">${lugar.nombre} - ${lugar.ubicacion}</div>`;
+    });
+    return html;
+}
+
+
+    </script>
+</head>
+<body>
+    <h1>Bienvenido al XIX Encuentro Macro Región Sur - Puno 2025<br>Catálogo de Lugares y Servicios</h1>
+    <div class="background-container">
+        <img src="PUNO1.jpg" alt="Puno1">
+        <div class="tabs">
+            <button class="tab-button" onclick="abrirVentanaHoteles()">Hoteles</button>
+            <button class="tab-button" onclick="abrirVentanaTurismo()">Lugares Turísticos</button>
+            <button class="tab-button" onclick="abrirVentanaRestaurantes()">Restaurantes</button>
+            <button class="tab-button" onclick="abrirVentanaConcentracion()">Concentración</button>
+        </div>
+    </div>
+</body>
+</html>
+
+
